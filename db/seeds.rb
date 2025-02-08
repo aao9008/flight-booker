@@ -7,3 +7,19 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+airports = [
+  { code: "JFK" },
+  { code: "LGA" },
+  { code: "MCO" },
+  { code: "XNA" },
+  { code: "GYE" },
+  { code: "LAX" }
+]
+
+
+airports.each do |airport|
+  Airport.create(airport)
+end
+
+puts "Seeded #{Airport.count} airports!"

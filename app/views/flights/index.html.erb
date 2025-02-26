@@ -1,2 +1,54 @@
-<h1>Flights#index</h1>
-<p>Find me in app/views/flights/index.html.erb</p>
+<h1>Search Flights</h1>
+
+<%= form_with url: flights_path, method: :get, local: true do %>
+  <div>
+    <label>Departure Airport:</label>
+    <%= select_tag :departure_airport, options_from_collection_for_select(@airports, :id, :code, params[:departure_airport]), include_blank: "Select an Airport" %>
+  </div>
+
+  <div>
+    <label>Arrival Airport:</label>
+    <%= select_tag :arrival_airport, options_from_collection_for_select(@airports, :id, :code, params[:arrival_airport]), include_blank: "Select an Airport" %>
+  </div>
+
+  <div>
+    <label>Number of Passengers:</label>
+    <%= select_tag :passengers, options_for_select((1..4).to_a, selected: params[:passengers]), include_blank: "Select Passengers" %>
+  </div>
+
+  <div>
+    <label>Flight Date:</label>
+    <%= select_tag :start_datetime, options_for_select(@available_dates.map { |date| [date.strftime("%B %d, %Y"), date] }, selected: params[:start_datetime]), include_blank: "Select a Date" %>
+  </div>
+
+  <%= submit_tag "Search Flights" %>
+<% end %>
+
+<h2>Available Flights</h2>
+
+<ul>
+  <% if @flights.any? %>
+    <h3>Select Your Flight</h3>
+    <%= form_with url: new_booking_path, method: :get, local: true do |form| %>
+      <% @flights.each do |flight| %>
+          <div>
+            <label>
+              <%= radio_button_tag :flight_id, flight.id, params[:flight_id] == flight.id.to_s %>
+              <strong><%= flight.departure_airport.code %></strong> →
+              <strong><%= flight.arrival_airport.code %></strong> 
+              on <%= flight.start_datetime.strftime("%B %d, %Y %I:%M %p") %>
+              (Duration: <%= flight.duration %> mins)
+            </label>
+          </div>
+        <% end %>
+
+        <!--Hidden field to pass the number of passengers -->
+        <%= hidden_field_tag :passengers, params[:passengers] %>
+
+        <%= submit_tag "Continue to Booking" %>
+      <% end %>
+    <% else %>
+    <p>No flights found. Try a different search.</p>
+  <% end %>
+</ul>
+

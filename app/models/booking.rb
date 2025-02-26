@@ -11,6 +11,11 @@ class Booking < ApplicationRecord
   private
 
   def generate_confirmation_code
-    self.confirmation_code ||= SecureRandom.alphanumeric(6).upcase.gsub(/\d/, ("A".."Z").to_a.sample)  # Ensures only letters
+    return if confirmation_code.present?  # Skip if already set
+
+    loop do
+      self.confirmation_code = SecureRandom.alphanumeric(6).upcase.gsub(/\d/, ("A".."Z").to_a.sample)
+      break unless Booking.exists?(confirmation_code: confirmation_code)  # Ensure uniqueness
+    end
   end
 end

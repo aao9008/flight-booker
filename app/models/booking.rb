@@ -4,8 +4,9 @@ class Booking < ApplicationRecord
   validates :passengers, presence: { message: "must have at least one passenger" }
 
   belongs_to :flight
-  has_and_belongs_to_many :passengers
+  has_and_belongs_to_many :passengers, dependent: :destroy
 
+  accepts_nested_attributes_for :passengers, allow_destroy: true
   before_validation :generate_confirmation_code, on: :create
 
   private

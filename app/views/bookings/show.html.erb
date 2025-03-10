@@ -1,0 +1,21 @@
+<h1>Booking Details</h1>
+
+<% if flash[:notice] %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% end  %>
+
+<div>
+   <h2>Confirmation Code: <%= @booking.confirmation_code %></h2> 
+   <p> <strong>Departure Date:</strong> <%= @flight.start_datetime.strftime("%B %d, %Y at %I:%M%p") %> (Duration: <%= @flight.duration%> min)</p>
+   <p> <strong> Departure Airport: </strong> <%= @flight.departure_airport.code %></p>
+   <p> <strong>Arrival Airport:</strong> <%= @flight.arrival_airport.code %></p>
+   <p> <strong>Flight Number: </strong> <%= @flight.id %></p>
+</div>
+
+<div>
+    <h2>Passengers</h2>
+    <% @passengers.each do |passenger| %>
+        <p><strong>Name: </strong> <%= passenger.name %> </p>
+        <p><strong>Email: </strong> <%= passenger.email %> </p>
+    <% end %>
+</div>

@@ -1,2 +1,47 @@
-<h1>Bookings#new</h1>
-<p>Find me in app/views/bookings/new.html.erb</p>
+<h1>Booking</h1>
+<h2>Flight Information</h2>
+<div>
+    <p> <strong>Departure Date:</strong> <%= @flight.start_datetime.strftime("%B %d, %Y at %I:%M%p") %> (Duration: <%= @flight.duration%> min)</p>
+    <p> <strong> Departure Airport: </strong> <%= @flight.departure_airport.code %></p>
+    <p> <strong>Arrival Airport:</strong> <%= @flight.arrival_airport.code %></p>
+    <p> <strong>Flight Number: </strong> <%= @flight.id %></p>
+</div>
+
+<% if flash[:notice] %>
+  <p style="color: green;"><%= flash[:notice] %></p>
+<% elsif flash[:error] %>
+  <p style="color: red;"><%= flash[:error] %></p>
+<% end %>
+
+<% if @booking.errors.any? %>
+  <div style="color: red;">
+    <h3><%= pluralize(@booking.errors.count, "error") %> prevented this booking from being saved:</h3>
+    <ul>
+      <% @booking.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div>
+    <%= form_with model: @booking do |form| %>
+       <%= form.hidden_field :flight_id, value: @flight.id %>
+
+        <h2>Passengers: </h2>
+        
+        <%= form.fields_for :passengers do |passenger_form| %>
+            <div>
+                <%= passenger_form.label :name %>
+                <%= passenger_form.text_field :name %>
+
+                <%= passenger_form.label :email %>
+                <%= passenger_form.email_field :email %>
+            </div>
+        <% end %>
+        
+        
+        <%= form.submit %>
+    <% end %>
+</div>
+
